@@ -37,10 +37,8 @@ class LocationServiceBloc
     on<LocationServiceEvent>((event, emit) async {
       if (event is Update) {
         emit(Awaiting());
-        Timer.periodic(Duration(seconds: 2), (timer) {
-            emit(ServiceOn());
-          
-        });
+        await Future.delayed(const Duration(seconds: 2));
+        emit(ServiceOn());
       }
       if (event is CatchError) {
         emit(ServiceThrottled());

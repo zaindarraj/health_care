@@ -77,23 +77,20 @@ class _PatientState extends State<Patient> {
       );
     }, listener: (context, state) {
       if (state is Home) {
-        
-
         int index = 0;
         state.list.isNotEmpty
             ? state.list.forEach((element) async {
-              AndroidNotificationDetails androidChannelSpecifics =
-           AndroidNotificationDetails(
-          index.toString(),
-          index.toString(),
-         
-        );
-        var initializationSettingsAndroid =
-            const AndroidInitializationSettings('@mipmap/ic_launcher');
-        var initSetttings =
-            InitializationSettings(android: initializationSettingsAndroid);
-        flutterLocalNotificationsPlugin.initialize(initSetttings,
-            onSelectNotification: onSelectNotification);
+                AndroidNotificationDetails androidChannelSpecifics =
+                    AndroidNotificationDetails(
+                  index.toString(),
+                  index.toString(),
+                );
+                var initializationSettingsAndroid =
+                    const AndroidInitializationSettings('@mipmap/ic_launcher');
+                var initSetttings = InitializationSettings(
+                    android: initializationSettingsAndroid);
+                flutterLocalNotificationsPlugin.initialize(initSetttings,
+                    onSelectNotification: onSelectNotification);
                 await Future.delayed(Duration(seconds: 2));
                 await flutterLocalNotificationsPlugin.show(
                     index,
@@ -244,45 +241,55 @@ class _PatientState extends State<Patient> {
         children: [
           const Text("Health Care App"),
           state.list.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Nearby patients : "),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        child: ListView.builder(
-                            itemCount: state.list.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                dense: true,
-                                title: const Text(
-                                  "Name and Health State",
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                subtitle: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(state.list[index].data()["FirstName"]),
-                                    Text(
-                                      state.list[index].data()["Health State"],
-                                      style: TextStyle(
-                                          color: state.list[index]
-                                                      .data()["Health State"] ==
-                                                  "healthy"
-                                              ? Colors.green
-                                              : Colors.red),
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Nearby patients : "),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: ListView.builder(
+                          itemCount: state.list.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              dense: true,
+                              title: const Text(
+                                "Name and Health State",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: Center(
+                                        child: Text(state.list[index]
+                                            .data()["FirstName"]),
+                                      )),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    child: Center(
+                                      child: Text(
+                                        state.list[index]
+                                            .data()["Health State"],
+                                        style: TextStyle(
+                                            color: state.list[index].data()[
+                                                        "Health State"] ==
+                                                    "healthy"
+                                                ? Colors.green
+                                                : Colors.red),
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
                 )
               : const Text("No one in sight")
         ],

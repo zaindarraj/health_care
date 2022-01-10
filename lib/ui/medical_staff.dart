@@ -75,7 +75,7 @@ class _MedicalStaffState extends State<MedicalStaff> {
                 }
                 if (state is PatientsList) {
                   return state.list.isNotEmpty
-                      ? patientListWidget(state)
+                      ? Center(child: patientListWidget(state))
                       : const Center(child: Text("no patients"));
                 } else if (state is ReportsList) {
                   return state.list.isNotEmpty
@@ -231,19 +231,22 @@ class _MedicalStaffState extends State<MedicalStaff> {
               "Name and Health State",
               style: TextStyle(color: Colors.blue),
             ),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(state.list[index].data()["FirstName"]),
-                Text(
-                  state.list[index].data()["Health State"],
-                  style: TextStyle(
-                      color:
-                          state.list[index].data()["Health State"] == "healthy"
-                              ? Colors.green
-                              : Colors.red),
-                )
-              ],
+            subtitle: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(state.list[index].data()["FirstName"]),
+                  Text(
+                    state.list[index].data()["Health State"],
+                    style: TextStyle(
+                        color:
+                            state.list[index].data()["Health State"] == "healthy"
+                                ? Colors.green
+                                : Colors.red),
+                  )
+                ],
+              ),
             ),
           );
         });

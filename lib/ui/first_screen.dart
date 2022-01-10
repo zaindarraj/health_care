@@ -70,6 +70,11 @@ class _FirstScreenState extends State<FirstScreen> {
                 child: BlocConsumer<RegisterBloc, RegisterState>(
                   listener: (context, state) {},
                   builder: (context, state) {
+                    if (state is location.Awaiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     if (state is Finished) {
                       return BlocConsumer<location.LocationServiceBloc,
                               location.LocationServiceState>(
