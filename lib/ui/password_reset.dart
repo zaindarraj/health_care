@@ -46,9 +46,14 @@ class _PasswordResetState extends State<PasswordReset> {
             ),
             TextButton(
                 onPressed: () {
+                  if (editingController.text.isNotEmpty) {
                   BlocProvider.of<RegisterBloc>(context).add(ResetPassword(
                       email: editingController.text
-                          .replaceAll(RegExp(r"\s+"), "")));
+                          .replaceAll(RegExp(r"\s+"), "")));}else{
+                             ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Please fill all fields")));
+                          }
                 },
                 child: const Text("Submit"))
           ],
