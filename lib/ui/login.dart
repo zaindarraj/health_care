@@ -5,6 +5,7 @@ import 'package:health_care_app/logic/patient/bloc/patient_bloc.dart';
 import 'package:health_care_app/logic/register/bloc/register_bloc.dart';
 import 'package:health_care_app/ui/medical_staff.dart';
 import 'package:health_care_app/ui/password_reset.dart';
+import 'package:health_care_app/ui/patient.dart';
 import 'package:health_care_app/ui/register.dart';
 import 'package:health_care_app/ui/widgits.dart';
 
@@ -65,7 +66,7 @@ class _LogInState extends State<LogIn> {
                                   PatientBloc(userId: state.user.uid)
                                     ..add(GoHome()),
                             ),
-                          ], child: const MedicalStaff())),
+                          ], child: const Patient())),
                   (route) => false);
             }
           }

@@ -20,13 +20,14 @@ class _PasswordResetState extends State<PasswordReset> {
           centerTitle: true,
           title: const Text("Password Reset"),
         ),
-        body: BlocBuilder<RegisterBloc,RegisterState>(builder: (context, state) {
+        body:
+            BlocBuilder<RegisterBloc, RegisterState>(builder: (context, state) {
           if (state is Finished) {
             return Center(
               child: Text("All done, please check your email."),
             );
           } else {
-           return  bodyWidget(context);
+            return bodyWidget(context);
           }
         }));
   }
@@ -47,13 +48,13 @@ class _PasswordResetState extends State<PasswordReset> {
             TextButton(
                 onPressed: () {
                   if (editingController.text.isNotEmpty) {
-                  BlocProvider.of<RegisterBloc>(context).add(ResetPassword(
-                      email: editingController.text
-                          .replaceAll(RegExp(r"\s+"), "")));}else{
-                             ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Please fill all fields")));
-                          }
+                    BlocProvider.of<RegisterBloc>(context).add(ResetPassword(
+                        email: editingController.text
+                            .replaceAll(RegExp(r"\s+"), "")));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Please fill all fields")));
+                  }
                 },
                 child: const Text("Submit"))
           ],
