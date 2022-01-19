@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,16 +20,35 @@ class Patient extends StatefulWidget {
 
 class _PatientState extends State<Patient> {
   TextEditingController reportText = TextEditingController();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
+  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
+  AndroidNotificationDetails? androidChannelSpecifics;
   Future<void> onSelectNotification(String? payload) async {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return BlocProvider(
-        create: (context) => NotificationCubit(name: payload as String),
+        create: (_) => NotificationCubit(jsonMap : payload as String)..goMap(),
         child: const MapScreen(),
       );
     }));
+  }
+
+  dynamic initializationSettingsAndroid;
+  dynamic initSetttings;
+  void initNotification() {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    androidChannelSpecifics =
+        const AndroidNotificationDetails("ID", "Health Care Patients");
+    initializationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    initSetttings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin!
+        .initialize(initSetttings, onSelectNotification: onSelectNotification);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initNotification();
   }
 
   @override
@@ -75,32 +96,11 @@ class _PatientState extends State<Patient> {
       return const Center(
         child: CircularProgressIndicator(),
       );
-    }, listener: (context, state) {
+    }, listener: (context, state) async {
       if (state is Home) {
-        int index = 0;
-        state.list.isNotEmpty
-            ? state.list.forEach((element) async {
-                AndroidNotificationDetails androidChannelSpecifics =
-                    AndroidNotificationDetails(
-                  index.toString(),
-                  index.toString(),
-                );
-                var initializationSettingsAndroid =
-                    const AndroidInitializationSettings('@mipmap/ic_launcher');
-                var initSetttings = InitializationSettings(
-                    android: initializationSettingsAndroid);
-                flutterLocalNotificationsPlugin.initialize(initSetttings,
-                    onSelectNotification: onSelectNotification);
-                await Future.delayed(Duration(seconds: 2));
-                await flutterLocalNotificationsPlugin.show(
-                    index,
-                    "Nearby Patient !",
-                    element.data()["FirstName"],
-                    NotificationDetails(android: androidChannelSpecifics),
-                    payload: element.data()["FirstName"]);
-                index++;
-              })
-            : null;
+        {
+          state.list.isNotEmpty ? await sendNotification(state, context) : null;
+        }
       }
       if (state is LoggedOut) {
         Navigator.pushReplacement(
@@ -110,6 +110,20 @@ class _PatientState extends State<Patient> {
                       create: (context) => RegisterBloc()..add(Check()),
                       child: const FirstScreen(),
                     )));
+      }
+    });
+  }
+
+  Future<void> sendNotification(Home state, BuildContext context) async {
+    return state.list.toList().forEach((element) async {
+      if (BlocProvider.of<PatientBloc>(context).userId !=
+          element.data()["ID"]) {
+        await flutterLocalNotificationsPlugin!.show(
+            element.data()["ID"].hashCode,
+            "Nearby Patient !",
+            element.data()["FirstName"],
+            NotificationDetails(android: androidChannelSpecifics),
+            payload: json.encode(element.data()));
       }
     });
   }
@@ -223,7 +237,6 @@ class _PatientState extends State<Patient> {
           ),
           TextButton(
               onPressed: () {
-                print(BlocProvider.of<RegisterBloc>(context).auth);
                 BlocProvider.of<PatientBloc>(context).add(
                     LogOut(auth: BlocProvider.of<RegisterBloc>(context).auth));
               },

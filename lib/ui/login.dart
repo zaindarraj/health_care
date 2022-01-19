@@ -78,60 +78,57 @@ class _LogInState extends State<LogIn> {
         }
 
         return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.height * 0.4,
-              decoration: boxDecoration(Colors.blue),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Form(
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode.always,
-                        validator: validateEmail,
-                        controller: emailC,
-                        decoration: inputDecoration("Email"),
-                      ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: boxDecoration(Colors.blue),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Form(
+                    child: TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: validateEmail,
+                      controller: emailC,
+                      decoration: inputDecoration("Email"),
                     ),
-                    TextFormField(
-                      obscureText: true,
-                      controller: passwordC,
-                      decoration: inputDecoration("Password"),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          if (emailC.text.isNotEmpty &&
-                              passwordC.text.isNotEmpty) {
-                            BlocProvider.of<RegisterBloc>(context).add(
-                                LogInEvent(
-                                    email: emailC.text
-                                        .replaceAll(RegExp(r"\s+"), ""),
-                                    password: passwordC.text));
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Please fill all fields")));
-                          }
-                        },
-                        child: const Text("Sign In")),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => BlocProvider.value(
-                                        value: BlocProvider.of<RegisterBloc>(
-                                            context),
-                                        child: const PasswordReset(),
-                                      )));
-                        },
-                        child: const Text("Reset Password"))
-                  ],
-                ),
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    controller: passwordC,
+                    decoration: inputDecoration("Password"),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        if (emailC.text.isNotEmpty &&
+                            passwordC.text.isNotEmpty) {
+                          BlocProvider.of<RegisterBloc>(context).add(
+                              LogInEvent(
+                                  email: emailC.text
+                                      .replaceAll(RegExp(r"\s+"), ""),
+                                  password: passwordC.text));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Please fill all fields")));
+                        }
+                      },
+                      child: const Text("Sign In")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                      value: BlocProvider.of<RegisterBloc>(
+                                          context),
+                                      child: const PasswordReset(),
+                                    )));
+                      },
+                      child: const Text("Reset Password"))
+                ],
               ),
             ),
           ),

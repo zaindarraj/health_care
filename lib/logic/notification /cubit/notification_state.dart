@@ -10,6 +10,6 @@ abstract class NotificationState extends Equatable {
 class NotificationInitial extends NotificationState {}
 
 class NotificationClicked extends NotificationState {
-  String name;
-  NotificationClicked({required this.name});
+  Map<String, dynamic> mapData;
+  NotificationClicked({required this.mapData});
 }
