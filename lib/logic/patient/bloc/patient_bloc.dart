@@ -74,13 +74,14 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> list = [];
           List<QueryDocumentSnapshot<Map<String, dynamic>>> data =
               await listData("RegiesterData", "AccountType", "patient");
-          data.forEach((element) {
+          data.toList().forEach((element) {
             Distance distance = const Distance();
             final double meter = distance(
                 LatLng(double.parse(latitude), double.parse(longitude)),
                 LatLng(double.parse(element["latitude"]),
                     double.parse(element["longitude"])));
             if (meter < 20) {
+              print(element);
               list.add(element);
             }
           });
